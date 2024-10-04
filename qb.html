@@ -1,0 +1,290 @@
+<html>
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qb</title>
+<style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-x: hidden;
+       
+    background-size: 40%; /* Cover the entire body */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-position: center; 
+    }
+
+    button, #gtxt {
+      position: fixed;
+      bottom: 0;
+      height: 15vh;
+      width: 25vw;
+      opacity: 0.5;
+      background-color: white;
+      color: black;
+      font-size: 20px;
+      text-align: center;
+      outline: none;
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    #pbtn {
+      left: -2%;
+      bottom: -2%;
+      border-radius: 20px;
+      transition: height 0.5s ease, opacity 0.5s ease;
+      height: 0vh;
+      opacity: 0;
+    }
+
+    #nbtn {
+      right: -2%;
+      bottom: -2%;
+      border-radius: 20px;
+      transition: height 0.5s ease, opacity 0.5s ease; 
+      height: 0vh;
+      opacity: 0;
+    }
+
+    #gtxt {
+      width: 30vw;
+      height: 8vh;
+      margin-left: 35vw;
+      padding-top: 4%;
+      opacity: 0.7;
+      font-size: 20px;
+      border: none;
+      outline: none;
+      background-color: transparent;
+    }
+
+    .batch {
+      width: 100vw;
+      box-shadow: 0 0 5px 2px black;
+    }
+
+    #view {
+      overflow-x: hidden;
+      width: 100vw;
+      height: 100vh;
+      left: 0vw;
+      position: absolute;
+      border: none;
+      background-color: transparent;
+    }
+
+    #mainImage {
+      overflow-y: hidden;
+      position: absolute;
+      width: 100vw;
+      display: block;
+      overflow-x: hidden;
+    }
+
+    #batchimg {
+      position: absolute;
+      width: 100vw;
+      display: none;
+      overflow-x: hidden;
+    }
+  
+          #sidebar {
+            height: 100%;
+            width: 0; /* Start with sidebar closed */
+            position: fixed;
+            z-index: 9999999;
+            top: 0;
+            left: 0;
+            background-color: white;
+            overflow-x: hidden;
+            transition: 0.5s;
+            color: black;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+            border-bottom: 1px solid #555;
+        }
+
+        #sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        #sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        #ef {
+            position: fixed;
+            top: 10px; /* Adjusted position */
+            left: 10px; /* Adjusted position */
+            background-color: transparent;
+            border: none;
+            height: 40px; /* Increased height for better visibility */
+            width: 40px; /* Increased width for better visibility */
+            color: black;
+            font-size: 24px; /* Larger icon */
+            z-index: 10000000; /* Ensure the button is above the sidebar */
+        }
+
+        #ef:hover {
+            color: grey;
+            box-shadow: 0 0 10px yellow; /* Adjusted shadow for better visibility */
+        }
+</style>
+</head>
+<body>
+  <div id="main">
+<div class="image-container" id="view">
+  <img id="mainImage">
+  <div id='batchimg'></div>
+</div>
+
+<button id="pbtn" onclick="prev()">PREV</button>
+<span contenteditable="true" id="gtxt" onblur="gend()"></span>
+<button id="nbtn" onclick="next()">NEXT</button>
+</div>
+  
+  <div id="sidebar">
+    
+    <iframe src="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fassistone?alt=media" 
+            style="width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;">
+    </iframe>
+</div>
+
+<button id="ef" onclick="toggleNav()">☰</button>
+
+  
+<script>
+  
+  const params = new URLSearchParams(window.location.search);
+       const key = atob(params.get('key'));
+      const count = params.get('count');
+  
+ document.body.style.backgroundImage = "url('')";
+
+  
+  document.getElementById('gtxt').textContent=count;
+   let url = 'https://image.slidesharecdn.com/' + key + '-' + count + '-2048.jpg';
+    document.getElementById('mainImage').src = url;
+  
+  document.getElementById('view').addEventListener('click', function() {
+    const pbtn = document.getElementById('pbtn');
+    const nbtn = document.getElementById('nbtn');
+
+    pbtn.style.height = '15vh';
+    nbtn.style.height = '15vh';
+    pbtn.style.opacity = 0.6;
+    nbtn.style.opacity = 0.6;
+    pbtn.style.pointerEvents = 'auto';
+    nbtn.style.pointerEvents = 'auto';
+
+    setTimeout(() => {
+      pbtn.style.height = '0vh';
+      nbtn.style.height = '0vh';
+      pbtn.style.opacity = 0;
+      nbtn.style.opacity = 0;
+      pbtn.style.pointerEvents = 'none';
+      nbtn.style.pointerEvents = 'none';
+    }, 2000); 
+  });
+
+  function prev() {
+    document.body.style.backgroundImage = "url('https://i.gifer.com/Ybin.gif')";
+     document.getElementById('mainImage').src = '';
+    
+    let count = parseInt(document.getElementById('gtxt').textContent);
+    count = count - 1;
+    
+    
+     document.getElementById('gtxt').textContent=count;
+    let url = 'https://image.slidesharecdn.com/' + key + '-' + count + '-2048.jpg';
+    document.getElementById('mainImage').src = url;
+    document.body.style.backgroundImage = "url('')";
+  }
+
+  function next() {
+    document.body.style.backgroundImage = "url('https://i.gifer.com/Ybin.gif')";
+     document.getElementById('mainImage').src = '';
+    let count = parseInt(document.getElementById('gtxt').textContent);
+    count = count + 1;
+    document.getElementById('gtxt').textContent=count;
+    let url = 'https://image.slidesharecdn.com/' + key + '-' + count + '-2048.jpg';
+    document.getElementById('mainImage').src = url;
+     document.body.style.backgroundImage = "url('')";
+  }
+
+  function gend() {
+    document.body.style.backgroundImage = "url('https://i.gifer.com/Ybin.gif')";
+document.getElementById('mainImage').src = '';
+document.getElementById('batchimg').src = '';
+    let count = document.getElementById('gtxt').textContent;
+
+    if (count.includes('-')) {
+      // If range, display batch images
+      let [start, end] = count.split('-').map(Number);
+      let batchImages = '';
+      for (let i = start; i <= end; i++) {
+        let imgURL = 'https://image.slidesharecdn.com/' + key + '-' + i + '-2048.jpg';
+        batchImages += `<img src="${imgURL}" style="display:block; width:100%; margin-bottom:10px;box-shadow:0 0 10px 4px blue;" />`;
+      }
+      document.getElementById('mainImage').style.display = 'none';
+      document.getElementById('batchimg').innerHTML = batchImages;
+      document.getElementById('batchimg').style.display = 'block';
+    } else {
+      // Single image mode
+      let url = 'https://image.slidesharecdn.com/' + key + '-' + count + '-2048.jpg';
+      document.getElementById('mainImage').src = url;
+      document.getElementById('mainImage').style.display = 'block';
+      document.getElementById('batchimg').style.display = 'none';
+    }
+     document.body.style.backgroundImage = "url('')";
+  }
+
+   
+
+   
+
+  
+    // Event listener for keydown to handle arrow keys and enter key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        prev();
+      } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        next();
+      } else if (event.key === 'Enter') {
+        gend();
+      }
+    });
+
+    
+
+    function toggleNav() {
+        var sidebar = document.getElementById("sidebar");
+        var main = document.getElementById("main");
+        if (sidebar.style.width === "0px" || sidebar.style.width === "") {
+            sidebar.style.width = "100%"; // Expand to full width
+            main.style.marginLeft = "0"; // No margin on main
+        } else {
+            sidebar.style.width = "0"; // Collapse sidebar
+            main.style.marginLeft = "0"; // Reset margin
+        }
+    }
+
+
+     
+    
+  </script>
+</body>
+</html>

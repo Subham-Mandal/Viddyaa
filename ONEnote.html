@@ -1,0 +1,269 @@
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONEnote</title>
+
+<style>
+.imgx {
+    max-width: 80%; 
+    max-height: 80%; 
+    height: auto; 
+    cursor: pointer;
+    margin-left: 10%;
+     margin-top: 7%;
+  margin-bottom: 10%;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+}
+
+.imgy {
+    width: 80%;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: auto;
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+#searchtext {
+    width: 100%;
+    height:8%;
+    padding: 1%;
+   padding-left: 2%;
+    font-size:20px;
+    border: 1px solid #ccc;
+    transition: box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+
+
+#searchtext:hover {
+    box-shadow: 0 0 1000px green;
+}
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+
+    background-color: #f0f0f0;
+}
+
+ 
+
+    .black-screen {
+      background-color: black;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: Arial, sans-serif;
+      position:fixed;
+      top:0;
+left:0;
+    }
+    
+     
+    
+  header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 50px;
+        background-color: transparent;
+        z-index: 99999;
+        display: none;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px;
+        justify-content: flex-start;
+        gap: 20px; /* Space between buttons */
+    }
+
+    
+
+    #starbtn, #crossbtn {
+        height: 30px;
+        width: 30px;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+    }
+
+    #starbtn img, #crossbtn img {
+        max-width: 100%;
+    }
+</style>
+</head>
+
+<body>
+    <header id="buttonholder">
+        
+            <button id="crossbtn" onclick="cross()">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEixAXXlK75ahdXEa6PjKXLxwn52_JVDIKtrwtjEvF7CZijDe0y6feIlSRR7aerhKkIIb7PWvyuC1lOspFyorTwlQMJxd95lvsqYclR1RxjZzkLQPVosh2QkZpEaKeOzCJ7umHy6Pu0EGF7Z3wobNFx-wQtbmMJAPHx6P7wpCq41dJR8fcYx1-rRaZT8W8hK" />
+            </button>
+            <button id="starbtn" onclick="star()">
+                <img src="https://clipart-library.com/img/2184497.png" />
+            </button>
+      
+    </header>
+<div class="black-screen" id='logo'>
+<span id="editableSpan" class="main" contenteditable="true" onclick="mainp()" oninput="updateLocalStorage()"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: blue; font-weight: bold; font-family: Calibri; font-size: 45px;">one</span></span> <br><span style="color: red; font-weight: bold; font-family: &quot;Comic Sans MS&quot;; font-size: 70px;">NOTE
+</span><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"></span><br></span></span><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><span style="color: black; font-weight: normal; font-family: Arial; font-size: 22px;"><br></span></span></span>
+</span><br></span>
+  </div>
+  
+  
+<div id='topdiv'>
+<input id='searchtext' placeholder='Search'  onblur='search()'>
+
+<ul id="imageList"></ul>
+</div>
+
+
+
+    <script>
+
+   
+
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    const logo = document.getElementById('logo');
+    logo.style.transition = 'opacity 2s';
+    logo.style.opacity = '0';
+    
+    setTimeout(function() {
+      logo.style.display = 'none';
+    }, 2000); 
+  }, 2000);
+  
+    
+   fetch('https://onerealtimeserver-default-rtdb.firebaseio.com/SERVER/starss.json')
+            .then(response => response.json())
+            .then(data => {
+                // Loop through each value in the object (each URL)
+                Object.values(data).forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = 'imgx';
+                    
+                    // Set onclick to alert the image URL
+                    img.onclick = function() {
+                        fetchit(this.src);
+                    };
+
+                    // Append the image to the body
+                    document.body.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+  
+});
+
+
+  
+  
+function search(){
+let query=document.getElementById('searchtext').value;
+document.getElementById('imageList').innerHTML='';
+document.getElementById('searchtext').style.boxShadow='0 0 1000px red';
+let dataquery = query.replace(/ +/g, '%2B');
+
+fetch('https://in.images.search.yahoo.com/search/images?p='+dataquery+'%2Bslideshare')
+.then(response => response.text())
+.then(data => {
+document.getElementById('searchtext').style.boxShadow='0 0 0 white';
+const imageList = document.getElementById('imageList');
+const regex = /image\.slidesharecdn\.com.*?\.jpg/g;
+console.log('Results of ',query);
+let match;
+const addedUrls = new Set();
+
+while ((match = regex.exec(data)) !== null) {
+let imageUrl = match[0];
+imageUrl = imageUrl.replace(/\\/g, '');
+imageUrl = imageUrl.replace(/%2F/g, '/');
+imageUrl = imageUrl.replace(/\/(85|95)\//g, '/75/');
+imageUrl = imageUrl.substring(0, imageUrl.lastIndexOf('-'));
+imageUrl = imageUrl.substring(0, imageUrl.lastIndexOf('-'));
+imageUrl ='https://'+ imageUrl;
+
+if (!addedUrls.has(imageUrl)) {
+addedUrls.add(imageUrl);
+const listItem = document.createElement('img');
+listItem.src = imageUrl+'-1-2048.jpg';
+listItem.className = 'imgx';
+imageList.appendChild(listItem);
+listItem.onclick = function() {fetchit(this.src);};
+}
+}
+})
+.catch(error => console.error('Error fetching images:', error));
+
+
+
+}
+
+
+
+function fetchit(key) {
+  document.querySelectorAll('.imgx').forEach(el => el.remove());
+
+ sessionStorage.setItem('ssnow',key);
+    document.getElementById('buttonholder').style.display = 'block';
+    document.getElementById('topdiv').style.display = 'none';
+
+    let validCount = 0;
+
+    for (let val = 1; val <= 100; val++) {
+        const imageUrl = key.slice(0,-11) + '-' + val + '-2048.jpg';
+
+        const img = new Image();
+        img.src = imageUrl;
+        img.className = 'imgy';
+
+        img.onload = function() {
+            document.body.appendChild(img);
+            validCount++;
+        };
+
+        img.onerror = function() {
+            console.log('Error loading image: ' + imageUrl);
+        };
+    }
+}
+
+
+
+
+function cross(){
+const elements = document.getElementsByClassName('imgy');
+Array.from(elements).forEach(element => {element.remove();});
+document.getElementById('topdiv').style.display='block';
+document.getElementById('buttonholder').style.display='none';
+}
+      
+      function star(){
+    let key=sessionStorage.getItem('ssnow');
+        alert('saved : '+key);
+    const path = btoa('SERVER/starss/');
+    let data = btoa(key);
+    const logentry = document.createElement('iframe');
+    logentry.style.width = '0';
+    logentry.style.height = '0';
+    logentry.style.display = 'none';
+    logentry.src = 'https://ssssportal.blogspot.com/pushdata' + '/' + path + '/' + data + '/';
+    document.body.appendChild(logentry);
+}
+
+</script>
+</body>

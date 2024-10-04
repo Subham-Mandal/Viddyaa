@@ -1,0 +1,316 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viddyaa</title>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+     <style>
+        body {
+            margin: 0;
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        #filelist {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 25vw;
+            height: 100vh;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #filelist h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            color: #333;
+            font-size: 1.2em;
+        }
+        #filelist input {
+            width: calc(100% - 20px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+          background-color:yellow;
+          color:black;
+        }
+       
+       #filelist select, #filelist button {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+       
+        #filelist button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        #filelist button:hover {
+            background-color: #0056b3;
+        }
+        #file-list li, .file-item {
+            cursor: pointer;
+            font-size:10px;
+            margin-bottom: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        #file-list li:hover, .file-item:hover {
+            background-color: #e9ecef;
+        }
+        #metadata {
+            position: fixed;
+            top: 60vh;
+            left: 25vw;
+            width: 35vw;
+            height: 40vh;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #code-editor {
+            position: fixed;
+            top: 0;
+            left: 25vw;
+            width: 80vw;
+            height: 60vh;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #codepreview {
+            position: fixed;
+            top: 60vh;
+            left: 60vw;
+            width: 40vw;
+            height: 40vh;
+            background-color: white;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="filelist">
+        <h3>Viddyaa</h3>
+        <input type="text" id="file-name" placeholder="Enter file name"><br>
+      <select id="file-type-select">
+        <option value="text/html">HTML File (.html) / text</option>
+        <option value="text/javascript">JavaScript File (.js) / text</option>
+  <option value="text/css">CSS File (.css) / text</option>
+  <option value="text/plain">Text File (.txt) / text</option>
+  
+  <option value="text/json">JSON File (.json) / text</option>
+  
+  
+ 
+</select>
+<br>
+        <button id='btnsave' onclick="saveCode()">SAVE</button>
+      <button onclick="copydata()">Copy DATA</button>
+      <button onclick="copyurl()">Copy URL</button>
+      <button  onclick="deletex()">DELETE</button>
+       <div id="filelistx"></div>
+    </div>
+    <div id="metadata"></div>
+    <textarea id="code-editor" placeholder="Write your code here..."></textarea>
+    <iframe id="codepreview"></iframe>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEhgVwwkCTst0V1DOZUKvtjaXBppuMI3M",
+            authDomain: "onerealtimeserver.firebaseapp.com",
+            databaseURL: "https://onerealtimeserver-default-rtdb.firebaseio.com",
+            projectId: "onerealtimeserver",
+            storageBucket: "onerealtimeserver.appspot.com",
+            messagingSenderId: "263064716551",
+            appId: "1:263064716551:web:b5154b93c62545dfaa71a2",
+            measurementId: "G-90P78SK0Q0"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        const storage = firebase.storage();
+        const database = firebase.database();
+
+        window.onload = fetchAndDisplayFiles;
+
+        function saveCode() {
+           document.getElementById("btnsave").innerText = 'Pushing...';
+            const fileName = document.getElementById("file-name").value.trim();
+            if (!fileName) {
+                alert("Please enter a file name.");
+                return;
+            }
+
+            const code = document.getElementById("code-editor").value;
+            const storageRef = storage.ref(`Viddyaa/${fileName}`);
+          const fileType = document.getElementById('file-type-select').value;
+     const file = new Blob([code], { type: fileType });
+
+            storageRef.put(file).then(() => {
+                return storageRef.getDownloadURL();
+            }).then(url => {
+                return database.ref(`Viddyaa/${btoa(fileName)}`).set({
+                    fileName: fileName,
+                    fileURL: url,
+                    code:code
+                });
+            }).then(() => {
+                alert("Code saved successfully!");
+                fetchAndDisplayFiles();
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+      function loadCode() {
+    const fileName = document.getElementById("file-name").value.trim();
+    if (!fileName) {
+        alert("Please enter a file name to edit.");
+        return;
+    }
+
+    const fileUrl = `https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/Viddyaa%2F${encodeURIComponent(fileName)}?alt=media`;
+    document.getElementById("codepreview").src = fileUrl;
+  
+    const url = `https://onerealtimeserver-default-rtdb.firebaseio.com/Viddyaa/${btoa(fileName)}/code/.json`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data) {
+                document.getElementById("code-editor").value = data;
+            } else {
+                alert('No code found for the specified file.');
+            }
+        })
+        .catch(error => {
+            alert('Error fetching data: ' + error.message);
+        });
+}
+
+function fetchAndDisplayFiles() {
+    document.getElementById("btnsave").innerText = 'SAVE';
+    document.getElementById("filelistx").innerHTML = '';
+
+    storage.ref('Viddyaa/').listAll()
+        .then(result => {
+            const fileListDiv = document.getElementById('filelistx');
+            fileListDiv.innerHTML = '';  // Clear the file list before adding new items
+
+            result.items.forEach(fileRef => {
+                fileRef.getDownloadURL()
+                    .then(fileUrl => {
+                        const fileName = fileRef.name.split('/').pop();
+                        const item = document.createElement('div');
+                        item.className = 'file-item';
+                        item.textContent = fileName;
+
+                        item.onclick = () => {
+                            fetch(fileUrl.split('?')[0])
+                                .then(response => response.text())
+                                .then(fileData => {
+                                    document.getElementById('metadata').innerHTML = `<pre>${fileData}</pre><hr>${fileUrl.split('&')[0]}`;
+                                    document.getElementById('file-name').value = fileName;
+                                    loadCode();
+                                })
+                                .catch(error => console.error('Error fetching file data:', error));
+                        };
+
+                        fileListDiv.appendChild(item);
+                    })
+                    .catch(error => console.error('Error getting download URL:', error));
+            });
+        })
+        .catch(error => console.error('Error fetching file list:', error));
+}
+
+      function copydata() {
+    const codeEditorValue = document.getElementById("code-editor").value;
+    navigator.clipboard.writeText(codeEditorValue)
+        .then(() => {
+            alert("Code copied to clipboard.");
+        })
+        .catch(err => {
+            console.error('Error copying text: ', err);
+        });
+}
+
+function copyurl() {
+    const fileName = document.getElementById("file-name").value.trim();
+    if (!fileName) {
+        alert("Please enter a file name to copy its URL.");
+        return;
+    }
+
+    const fileUrl = `https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/Viddyaa%2F${encodeURIComponent(fileName)}?alt=media`;
+    navigator.clipboard.writeText(fileUrl)
+        .then(() => {
+            alert("File URL copied to clipboard.");
+        })
+        .catch(err => {
+            console.error('Error copying URL: ', err);
+        });
+}
+
+function deletex() {
+    const sure = confirm('Are you sure you want to delete this file?');
+    if (sure) {
+        const fileName = document.getElementById("file-name").value.trim();
+        if (!fileName) {
+            alert("Please enter a file name to delete.");
+            return;
+        }
+
+        const fileUrl = `https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/Viddyaa%2F${encodeURIComponent(fileName)}?alt=media`;
+        const url = `https://onerealtimeserver-default-rtdb.firebaseio.com/Viddyaa/${btoa(fileName)}/.json`;
+
+        // Delete file from Firebase Storage
+        const storageRef = storage.refFromURL(fileUrl);
+        storageRef.delete()
+            .then(() => {
+                console.log('File deleted from storage.');
+            })
+            .catch(error => {
+                console.error('Error deleting file from storage: ', error);
+            });
+
+        // Delete file data from Firebase Realtime Database
+        fetch(url, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    alert("File and its data deleted successfully.");
+                } else {
+                    throw new Error('Failed to delete file data.');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting file data: ', error);
+            });
+    }
+}
+
+      
+    </script>
+</body>

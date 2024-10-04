@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Drawing Canvas</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            touch-action: none;
+            position: fixed;
+            z-index: 99;
+            background-color: transparent;
+            height: 85vh;
+            width: 94vw;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls input, .controls button {
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #roughpage {
+            position: fixed;
+            z-index: 999;
+            background-color: transparent;
+            height: 85vh;
+            width: 94vw;
+            padding: 2%;
+            margin: auto;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div contenteditable='true' id='roughpage'></div>
+<canvas id="drawingCanvas"></canvas>
+
+<!-- Controls for color, line width, and clear -->
+<div class="controls">
+    <input type="color" id="colorPicker" value="#000000">
+    <input type="range" id="lineWidth" min="1" max="20" value="5">
+    <button id="clearCanvas">Clear</button>
+    <button id="modebtn" onclick="modechange()">Mode</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    const colorPicker = document.getElementById('colorPicker');
+    const lineWidthPicker = document.getElementById('lineWidth');
+    const clearButton = document.getElementById('clearCanvas');
+
+    // Set initial values
+    ctx.strokeStyle = colorPicker.value;
+    ctx.lineWidth = lineWidthPicker.value;
+
+    // Resize canvas to full-screen
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let drawing = false;
+
+    function startDrawing(x, y) {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    function draw(x, y) {
+        if (!drawing) return;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+
+    function stopDrawing() {
+        drawing = false;
+        ctx.closePath();
+    }
+
+    // Mouse events
+    canvas.addEventListener('mousedown', (e) => startDrawing(e.clientX, e.clientY));
+    canvas.addEventListener('mousemove', (e) => draw(e.clientX, e.clientY));
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    // Touch events
+    canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startDrawing(touch.clientX, touch.clientY);
+        e.preventDefault();  // Prevent scrolling
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        draw(touch.clientX, touch.clientY);
+        e.preventDefault();  // Prevent scrolling
+    });
+
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', stopDrawing);
+
+    // Update color
+    colorPicker.addEventListener('change', (e) => {
+        ctx.strokeStyle = e.target.value;
+    });
+
+    // Update line width
+    lineWidthPicker.addEventListener('input', (e) => {
+        ctx.lineWidth = e.target.value;
+    });
+
+    // Clear the canvas
+    clearButton.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    let isActive = false;
+
+    function modechange() {
+        isActive = !isActive;
+        if (isActive) {
+            document.getElementById('roughpage').style.zIndex = '99';
+            document.getElementById('drawingCanvas').style.zIndex = '9999';
+        } else {
+            document.getElementById('roughpage').style.zIndex = '9999';
+            document.getElementById('drawingCanvas').style.zIndex = '99';
+        }
+    }
+</script>
+
+</body>
+</html>

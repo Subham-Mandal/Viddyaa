@@ -1,0 +1,230 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary Search</title>
+    <script src='https://cdn.jsdelivr.net/gh/Subham-Mandal/oneserver@master/v1.js'></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        audio {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+      iframe{
+      position:fixed; 
+        top:0; left:0; 
+        width:100%; height:100%; 
+        z-index:9999; 
+        overflow:auto;
+      }
+      
+      #cls{
+      position:fixed; 
+        top:0; 
+        right:0;
+        width:20vw;
+        height:20vw;
+        opacity:0.3;
+        border-radius:90%;
+        background:red; 
+        color:white; 
+        z-index:10000;
+      }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ONE word</h1>
+        <input type="text" id="wordInput" onfocus='this.select()' placeholder="Enter a word..."  />
+      
+        <button onclick="searchWord()">Search</button>
+        <button id="extrabtn" onclick="extra()" style="margin-top: 10px;background-color:red">Extra</button>
+      
+        <button id="injectButton" onclick="injectWord()" style="margin-top: 10px;background-color:blue">Inject</button>
+
+        <div class="section" id="banglaMeaning"></div>
+
+        <div class="section" id="definitions"></div>
+        <div class="section" id="synonyms"></div>
+        <div class="section" id="antonyms"></div>
+        <div class="section" id="examples"></div>
+        <div class="section" id="audio"></div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            let find = new URLSearchParams(window.location.search).get('find');
+            if (find) {
+                document.getElementById('wordInput').value = find;
+                searchWord(); 
+              document.body.style.cssText = "background-color: black; color: white; opacity: 0.5;";
+
+            }
+        };
+
+        async function fetchBanglaMeaning(word) {
+           document.body.style.cssText = "background-color: black; color: white; opacity: 0.5;";
+            const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURI(word)}`);
+            const data = await response.json();
+            const banglaMeaning = data[0][0][0];
+            const banglaMeaningContainer = document.getElementById('banglaMeaning');
+            if (banglaMeaning) {
+                banglaMeaningContainer.innerHTML = `<h2>Bangla Meaning</h2><p>${banglaMeaning}</p>`;
+            } else {
+                banglaMeaningContainer.innerHTML = '';
+            }
+        }
+
+        async function fetchDictionaryData(word) {
+           document.body.style.cssText = "background-color: black; color: white; opacity: 0.5;";
+            const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            const data = await response.json();
+            const definitionsSet = new Set();
+            const synonymsSet = new Set();
+            const antonymsSet = new Set();
+            const examplesSet = new Set();
+            let audioUrl = null;
+
+            data.forEach(entry => {
+                entry.meanings.forEach(meaning => {
+                    meaning.definitions.forEach(def => {
+                        definitionsSet.add(def.definition);
+                        if (def.example) examplesSet.add(def.example);
+                    });
+                    meaning.synonyms.forEach(syn => synonymsSet.add(syn));
+                    meaning.antonyms.forEach(ant => antonymsSet.add(ant));
+                });
+
+                if (audioUrl === null && entry.phonetics && entry.phonetics.length > 0) {
+                    entry.phonetics.forEach(phonetic => {
+                        if (phonetic.audio && !audioUrl) {
+                            audioUrl = phonetic.audio;
+                        }
+                    });
+                }
+            });
+
+            function renderList(id, title, items) {
+               document.body.style.cssText = "background-color: white; color: black; opacity: 1;";
+                const container = document.getElementById(id);
+                if (items.size > 0) {
+                    const html = `<hr><h2>${title}</h2><ul>` + 
+                                 Array.from(items).map(item => `<li>${item}</li>`).join('') + 
+                                 `</ul>`;
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = '';
+                }
+            }
+
+            renderList('definitions', 'Definitions', definitionsSet);
+            renderList('synonyms', 'Synonyms', synonymsSet);
+            renderList('antonyms', 'Antonyms', antonymsSet);
+            renderList('examples', 'Examples', examplesSet);
+
+            const audioContainer = document.getElementById('audio');
+            if (audioUrl) {
+                audioContainer.innerHTML = `<h2>Pronunciation</h2><audio controls><source src="${audioUrl}" type="audio/mpeg"></audio>`;
+            } else {
+                audioContainer.innerHTML = '';
+            }
+        }
+
+      function injectWord() {
+         document.body.style.cssText = "background-color: black; color: white; opacity: 0.5;";
+    const word = document.getElementById('wordInput').value.trim();
+    if (word) {
+       document.body.style.cssText = "background-color: white; color: black; opacity: 1;";
+        const wordRef = firebase.database().ref('MYWORD/WORDS');
+        wordRef.push(word)
+            .then(() => alert(`Word injected successfully`))  // Correct success message
+            .catch(error => alert(`Error injecting word: ${error.message}`));  // Catching and displaying error
+    } else {
+        alert('Please enter a word before injecting.');
+    }
+}
+
+
+        function searchWord() {
+            const word = document.getElementById('wordInput').value.trim();
+            if (word) {
+                fetchBanglaMeaning(word);
+                fetchDictionaryData(word);
+            }
+        }
+      
+        function extra() {
+            const word = document.getElementById('wordInput').value;
+            if (word) {
+              let iframe = document.createElement('iframe'); 
+              iframe.src='https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fonewordext?alt=media&find='+word.replace(/ /g,'%2B');
+              
+              document.body.appendChild(iframe); 
+              let closeButton = document.createElement('button'); 
+              closeButton.innerText = 'X'; 
+              closeButton.id = 'cls'; 
+              closeButton.onclick = () => { iframe.remove(); closeButton.remove(); }; 
+              document.body.appendChild(closeButton);
+
+            }
+        }
+    </script>
+
+</body>
+</html>

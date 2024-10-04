@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+          margin-top:3%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            background-color: #004a99;
+        }
+
+        .iframe-container {
+            max-height: 0;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+            margin-top: 10px;
+            overflow: hidden; /* Prevent content overflow */
+        }
+
+        /* Show Class */
+        .show {
+            max-height: 80vh; /* Ensure iframe container is tall enough */
+            opacity: 1;
+            transition: max-height 0.5s ease-in, opacity 0.5s ease-in;
+        }
+
+        /* Responsive Iframe */
+        iframe {
+            width: 96vw; /* Set iframe width to 99% of viewport width */
+            height: 80vh; /* Set iframe height to 80% of viewport height */
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn1">Notbook</button>
+    <div class="iframe-container" id="iframeContainer1">
+        <iframe id="iframe1" src="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FNotbook?alt=media"></iframe>
+    </div>
+
+    <button id="btn2">Drawboard</button>
+    <div class="iframe-container" id="iframeContainer2">
+        <iframe id="iframe2" src="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fdrawboard?alt=media"></iframe>
+    </div>
+ 
+    <button id="btn3">Quical</button>
+    <div class="iframe-container" id="iframeContainer3">
+        <iframe id="iframe3" src="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fquical?alt=media"></iframe>
+    </div>
+    
+    <button id="btn4">ONEword</button>
+    <div class="iframe-container" id="iframeContainer4">
+        <iframe id="iframe4" src="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FONEwordiframe?alt=media"></iframe>
+    </div>
+  
+    <button id="btn5">Solvex</button>
+    <div class="iframe-container" id="iframeContainer5">
+        <iframe id="iframe5" src="https://onessssweb.blogspot.com/p/solvex.html"></iframe>
+    </div>
+  
+    <script>
+        function toggleIframe(buttonId, iframeId, containerId) {
+            const iframeContainer = document.getElementById(containerId);
+
+            if (iframeContainer.classList.contains('show')) {
+                iframeContainer.classList.remove('show');
+            } else {
+                iframeContainer.classList.add('show');
+            }
+        }
+
+        // Add click event listeners to buttons
+        document.getElementById('btn1').addEventListener('click', () => toggleIframe('btn1', 'iframe1', 'iframeContainer1'));
+        document.getElementById('btn2').addEventListener('click', () => toggleIframe('btn2', 'iframe2', 'iframeContainer2'));
+        document.getElementById('btn3').addEventListener('click', () => toggleIframe('btn3', 'iframe3', 'iframeContainer3'));
+        document.getElementById('btn4').addEventListener('click', () => toggleIframe('btn4', 'iframe4', 'iframeContainer4'));
+        document.getElementById('btn5').addEventListener('click', () => toggleIframe('btn5', 'iframe5', 'iframeContainer5'));
+    </script>
+</body>
+</html>

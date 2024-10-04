@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Buttons</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .button-container {
+      padding:15%;
+      
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 2fr));
+      gap: 10%;
+      width: 100%;
+    }
+
+    .image-button {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%; /* This ensures the button is square */
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .image-button img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-button:hover {
+      transform: scale(1.05);
+    }
+
+    .image-button:active {
+      transform: scale(0.95);
+    }
+
+    .image-button .name-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 1.1em;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="button-container">
+ 
+    
+   
+    
+  
+    
+     <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FPractice?alt=media" class="image-button">
+      <img src="https://media.kasperskydaily.com/wp-content/uploads/sites/92/2020/02/17105257/game-ratings-featured.jpg" alt="Practice">
+      <div class="name-overlay">Practice</div>
+    </a>
+    
+    
+      <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FONEwordiframe?alt=media" class="image-button">
+      <img src="https://www.rd.com/wp-content/uploads/2017/12/This-Is-the-Most-Beautiful-Word-in-the-English-Language_116274073_Simon-Bratt-ft.jpg" alt="ONEword">
+      <div class="name-overlay">ONEword</div>
+    </a>
+    
+    <a href="https://viddyaa.blogspot.com/English/" class="image-button">
+      <img src="https://www.easytogrowbulbs.com/cdn/shop/articles/plant_roots_illustration_made_suare.jpg" alt="Root ENG">
+      <div class="name-overlay">Root ENG</div>
+    </a>
+    
+    <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fqb?alt=media&&count=7&key=cGRmY29mZmVlLTI0MDMwNDA1NTkwNi04ZGU2YmJhZi83NS9nZW5lcmFsLWVuZ2xpc2gtYXJpaGFudC0zLXBkZi1mcmVlLXBkZg==" class="image-button">
+      <img src="https://m.media-amazon.com/images/I/716hoveri0L._AC_UF1000,1000_QL80_.jpg" alt="Arihant GE">
+      <div class="name-overlay">Arihant GE</div>
+    </a>
+    
+    <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FONEnote?alt=media" class="image-button">
+      <img src="https://st.depositphotos.com/1741875/1237/i/450/depositphotos_12376816-stock-photo-stack-of-old-books.jpg" alt="ONEnote">
+      <div class="name-overlay">ONEnote</div>
+    </a>
+  
+  
+    
+    
+    <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2FNotbook?alt=media" class="image-button">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhglKk2QGjEApoimOAOV1HORsyuYZ1x8Yo24UzNw5L_13DNiu35yETzFcFlT17ffDsdpoNbJKTCrJmweAt-nlQfAGjppmOvjLzxAcDkJsQSfVD27YpiZMGqV765Au1VY_cOtzbEqWWQP9Ffup55YtSVyPoB5CjhLYnrl8AC5qXM8PwUPuLFi2rcojYzo5MX" alt="Notbook">
+      <div class="name-overlay">Notbook</div>
+    </a>
+    
+    
+     <a href="https://parichalakone.blogspot.com/" class="image-button">
+      <img src="https://miro.medium.com/v2/resize:fit:1358/1*mNXemEPdGwXLBft5YbIUEQ.png" alt="Parichalakone">
+      <div class="name-overlay">Parichalakone</div>
+    </a>
+    
+    <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fdrawboard?alt=media" class="image-button">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiqdpnVOuj67JSv3LjxoGgYRGNx0yFiBjFtwdPqyjzvqgF4Ge2yLC2MQzGiRhlckxRbwG7tAJzeZtf2nbs6pG85EcMRwYzJjo4MJAj8Wu-TG2OYhHwnDtdERmETOQgmWWqwYUUleJ30HHG_RYw0doQ21hzr5FGOl-w-Hhkd-phnsKpftdZB9eC2XcdmKSLC" alt="Drawboard">
+      <div class="name-overlay">Drawboard</div>
+    </a>
+    
+    
+    <a href="https://firebasestorage.googleapis.com/v0/b/onerealtimeserver.appspot.com/o/SCRIMAKONE%2Fquical?alt=media" class="image-button">
+      <img src="https://lilthugs.in/cdn/shop/products/jULS1Vt8t2_746x.jpg?v=1654847093" alt="quical">
+      <div class="name-overlay">quical</div>
+    </a>
+    
+       <a href="https://onessssweb.blogspot.com/p/solvex.html" class="image-button">
+      <img src="https://i.pinimg.com/474x/0c/61/50/0c61500810a9baf4767466086ffb5bc2.jpg" alt="Solvex">
+      <div class="name-overlay">Solvex</div>
+    </a>
+    <br><br>
+  </div>
+
+</body>
+</html>

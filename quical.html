@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koululaskin</title>
+    <style>
+        body {
+           
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+           background-color: black;
+        }
+
+        #n {
+            text-align: right;
+            width: 100%;
+            height: 100px;
+            font-size: 35px;
+            background-color: black;
+            color: white;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .button {
+            cursor: pointer;
+            transition: background-color 0.5s ease-out;
+            width: 18vw;
+          height:5vh;
+          padding:2%;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 1px solid white;
+        }
+
+        .button:hover {
+            background-color: white;
+           box-shadow:0 0 100px 20px yellow;
+            color: black;
+        }
+
+        #laskin {
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            margin: auto;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+   
+    </style>
+</head>
+<body>
+
+    <form name="l" id="laskin">
+        <table>
+            <tr>
+                <td colspan="4">
+                    <input type="text" name="n" id="n" disabled>
+                </td>
+            </tr>
+            <tr>
+              <td><input type="button" value="1" class="button" onclick="l.n.value+='1'"></td>
+                <td><input type="button" value="2" class="button" onclick="l.n.value+='2'"></td>
+                <td><input type="button" value="3" class="button" onclick="l.n.value+='3'"></td>
+              <td><input type="button" value="4" class="button" onclick="l.n.value+='4'"></td>
+               
+            </tr>
+            <tr>
+              
+                <td><input type="button" value="5" class="button" onclick="l.n.value+='5'"></td>
+              <td><input type="button" value="6" class="button" onclick="l.n.value+='6'"></td>
+               <td><input type="button" value="7" class="button" onclick="l.n.value+='7'"></td>
+                <td><input type="button" value="8" class="button" onclick="l.n.value+='8'"></td>
+                 
+               
+            </tr>
+            <tr>
+              <td><input type="button" value="9" class="button" onclick="l.n.value+='9'"></td>
+                <td><input type="button" value="0" class="button" onclick="l.n.value+='0'"></td>
+               <td><input type="button" value="C" class="button" onclick="l.n.value=''"></td>
+               <td><input type="button" value="=" class="button" onclick="calculate()"></td>
+               
+            </tr>
+            <tr>
+             <td><input type="button" value="+" class="button" onclick="l.n.value+='+'"></td>
+                <td><input type="button" value="-" class="button" onclick="l.n.value+='-'"></td>
+              <td><input type="button" value="*" class="button" onclick="l.n.value+='*'"></td>
+            <td><input type="button" value="/" class="button /" onclick="l.n.value+='/'"></td>
+            </tr>
+            <tr>
+                 
+                
+            </tr>
+            <tr>
+               
+                <td><input type="button" value="." class="button" onclick="l.n.value+='.'"></td>
+               <td><input type="button" value="+/-" class="button" onclick="l.n.value*=-1"></td>
+                <td><input type="button" value="%" class="button" onclick="l.n.value=l.n.value / 100"></td>
+                <td><input type="button" value="^" class="button" onclick="l.n.value+='^'"></td>
+               
+            </tr>
+            <tr>
+               <td><input type="button" value="x^2" class="button" onclick="l.n.value=Math.pow(l.n.value, 2)"></td>
+                <td><input type="button" value="x^3" class="button" onclick="l.n.value=Math.pow(l.n.value, 3)"></td>
+                <td><input type="button" value="2&radic;x" class="button Neliöjuuri" onclick="l.n.value=Math.sqrt(l.n.value)"></td>
+              <td><input type="button" value="3&radic;x" class="button Kuutiojuuri" onclick="l.n.value=Math.cbrt(l.n.value)"></td>
+                
+            </tr>
+            <tr>
+                
+                <td><input type="button" value="n!" class="button" onclick="kertoma()"></td>
+              <td><input type="button" value="log(x)" class="button Logaritmi" onclick="l.n.value=Math.log(l.n.value)/2.303"></td>
+              <td><input type="button" value="1/x" class="button 1/x" onclick="l.n.value=1 / l.n.value"></td>
+              <td><input type="button" value="π" class="button Pii" onclick="l.n.value=Math.PI"></td>
+                 </tr>
+            <tr>
+                <td><input type="button" value="sin" class="button" onclick="l.n.value=Math.sin(l.n.value * Math.PI / 180)"></td>
+                <td><input type="button" value="cos" class="button" onclick="l.n.value=Math.cos(l.n.value * Math.PI / 180)"></td>
+                <td><input type="button" value="tan" class="button" onclick="l.n.value=Math.tan(l.n.value * Math.PI / 180)"></td>
+               <td><input type="button" value="(" class="button" onclick="l.n.value+='('"></td>
+               </tr>
+            <tr>
+                <td><input type="button" value="asin" class="button" onclick="l.n.value=Math.asin(l.n.value) * (180 / Math.PI)"></td>
+                <td><input type="button" value="acos" class="button" onclick="l.n.value=Math.acos(l.n.value) * (180 / Math.PI)"></td>
+                <td><input type="button" value="atan" class="button" onclick="l.n.value=Math.atan(l.n.value) * (180 / Math.PI)"></td>
+              
+                <td><input type="button" value=")" class="button" onclick="l.n.value+=')'"></td>
+               
+            </tr>
+        </table>
+    </form>
+
+    <script>
+        // Factorial function
+        function kertoma() {
+            let num = parseInt(l.n.value);
+            if (num < 0) return;
+            let result = 1;
+            for (let i = 2; i <= num; i++) {
+                result *= i;
+            }
+            l.n.value = result;
+        }
+
+        // Calculate expression with support for "^" (power)
+        function calculate() {
+            let expression = l.n.value.replace(/\^/g, "**");  // Replace ^ with ** for exponentiation
+            try {
+                l.n.value = eval(expression);
+            } catch {
+                l.n.value = "Error";
+            }
+        }
+    </script>
+</body>
+</html>
